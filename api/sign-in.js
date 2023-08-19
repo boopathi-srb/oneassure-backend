@@ -5,8 +5,7 @@ const router = express.Router();
 //password handler
 const bcrypt = require("bcrypt");
 
-
-router.post("/signin", (req, res) => {
+export default async (req, res) => {
     let { email, password } = req.body;
     email = email.trim();
     password = password.trim();
@@ -59,4 +58,4 @@ router.post("/signin", (req, res) => {
           }).status(500);;
         });
     }
-  });
+  };
