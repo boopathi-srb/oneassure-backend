@@ -55,7 +55,7 @@ async function stop() {
 
 //password handler
 const bcrypt = require("bcryptjs");
-const run = require("../../config/db");
+const run = require("../config/db");
 export default async (req, res) => {
     let { name, email, password } = req.body;
     name = name.trim();
