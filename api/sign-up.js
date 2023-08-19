@@ -3,7 +3,7 @@ const User = require("./../models/User");
 const router = express.Router();
 
 //password handler
-const bcrypt = require("bcrypt");
+const bcrypt = require("bcryptjs");
 const run = require("../config/db");
 export default async (req, res) => {
     let { name, email, password } = req.body;
