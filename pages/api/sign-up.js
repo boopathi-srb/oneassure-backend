@@ -1,10 +1,61 @@
-const express = require("express");
-const User = require("./../models/User");
-const router = express.Router();
+const mongoose = require("mongoose");
+const schema = mongoose.Schema;
+
+const UserSchema = new schema({
+  name: String,
+  email: String,
+  password: String,
+});
+
+const User = mongoose.model("User", UserSchema);
+//password handler
+const bcrypt = require("bcrypt");
+const dotenv = require("dotenv");
+dotenv.config();
+const { MongoClient, ServerApiVersion } = require('mongodb');
+const uri = process.env.MONGO_URI
+  // Create a MongoClient with a MongoClientOptions object to set the Stable API version
+const client = new MongoClient(uri, {
+    serverApi: {
+      version: ServerApiVersion.v1,
+      strict: true,
+      deprecationErrors: true,
+    }
+});
+  
+async function run() {
+    try {
+      console.log("inside db")
+      // Connect the client to the server	(optional starting in v4.7)
+      await client.connect();
+    
+      // Send a ping to confirm a successful connection
+      await client.db("admin").command({ ping: 1 });
+      console.log("Pinged your deployment. You successfully connected to MongoDB!");
+      return Math.random();
+    } catch(e){
+        console.error(e)
+      // Ensures that the client will close when you finish/error
+      await client.close();
+    }
+}
+
+async function stop() {
+    try {
+      // Connect the client to the server	(optional starting in v4.7)
+      await client.close();
+      // Send a ping to confirm a successful connection
+      await client.db("admin").command({ ping: 1 });
+      console.log("Pinged your deployment. You successfully connected to MongoDB!");
+    } catch {
+      // Ensures that the client will close when you finish/error
+      await client.close();
+    }
+}
 
 //password handler
 const bcrypt = require("bcryptjs");
-const run = require("../config/db");
+const run = require("../../config/db");
 export default async (req, res) => {
     let { name, email, password } = req.body;
     name = name.trim();
@@ -41,7 +92,7 @@ export default async (req, res) => {
       }).status(400);;
     } else {
       //checking if already exists
-      run.run().catch(console.dir)
+      let connection = run();
       User.find({ email })
         .then((result) => {
           if (result.length) {
@@ -93,5 +144,7 @@ export default async (req, res) => {
             message: "An error occured while checking for user!",
           });
         });
+        connection&&stop();
+        return res;
     }
 }

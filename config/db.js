@@ -1,8 +1,7 @@
 const dotenv = require("dotenv");
 dotenv.config();
 const { MongoClient, ServerApiVersion } = require('mongodb');
-const uri = process.env.MONGO_URI;
-  console.log(uri)
+const uri = process.env.MONGO_UR
   // Create a MongoClient with a MongoClientOptions object to set the Stable API version
 const client = new MongoClient(uri, {
     serverApi: {
@@ -14,7 +13,7 @@ const client = new MongoClient(uri, {
   
 async function run() {
     try {
-        console.log("inside db")
+      console.log("inside db")
       // Connect the client to the server	(optional starting in v4.7)
       await client.connect();
     
